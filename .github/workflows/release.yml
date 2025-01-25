@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install \
-            build-essential cmake ninja-build pkg-config autoconf automake autoconf-archive make texinfo bison flex m4 libtool libx11-dev
+            build-essential p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texinfo bison flex m4 libtool libx11-dev
           wget https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64.tar.xz
           tar -xf llvm-mingw-*.tar.xz
           mv llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64 llvm-mingw
@@ -73,3 +73,9 @@ jobs:
           vcpkg_dir=${{ env.RUNVCPKG_VCPKG_ROOT }}
           chmod 755 build-cross.sh
           ./build-cross.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: texlive-mingw-arm64
+          path: texlive-mingw-arm64.7z
