@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-prefix_dir=$PWD/texlive-depends
+prefix_dir=$PWD/texlive-windows-arm64
 mkdir -p "$prefix_dir"
 [ -z "$vcpkg_dir" ] && vcpkg_dir=$PWD/vcpkg
 vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic
@@ -87,7 +87,7 @@ $TARGET-gcc -Os -s -o mtxrun.exe mtxrun_exe.c -L./ -lmtxrun
 popd
 
 # install
-make install-strip
+make install
 make texlinks
 
 # install mtxrun.dll (copy from MSYS2)
