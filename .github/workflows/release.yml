@@ -38,6 +38,7 @@ jobs:
           echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-dynamic.cmake
           echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-static.cmake
           packages='zziplib icu harfbuzz[graphite2] cairo pixman libgd freetype libpng'
+          sed  -i 's/(ARM|arm)64/(ARM|arm|aarch)64/' scripts/cmake/vcpkg_configure_make.cmake
           ./vcpkg upgrade 
           ./vcpkg install $packages --triplet arm64-mingw-dynamic --host-triplet=arm64-linux-release --clean-after-build
           cd installed/arm64-mingw-dynamic/lib/
