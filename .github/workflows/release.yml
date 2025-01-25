@@ -1,0 +1,50 @@
+name: Build for Windows ARM64
+
+on:
+  push:
+
+jobs:
+  build-windows-arm64:
+    name: Build
+    runs-on: ubuntu-24.04-arm
+    env:
+      llvm_path: "${{ github.workspace }}/llvm-mingw"
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install \
+            build-essential cmake ninja-build pkg-config autoconf automake autoconf-archive make texlive-binaries texinfo bison flex m4 libtool
+          wget https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-ucrt-ubuntu-18.04-aarch64.tar.xz
+          tar -xf llvm-mingw-*.tar.xz
+          mv llvm-mingw-20220906-ucrt-ubuntu-18.04-aarch64 llvm-mingw
+          
+      - name: Setup a new (or from cache) vcpkg (and does not build any package)
+        uses: lukka/run-vcpkg@v11 # Always specify the specific _version_ of the
+                                  # action you need, `v11` in this case to stay up
+                                  # to date with fixes on the v11 branch
+        with:
+          vcpkgGitCommitId: 'b322364f06308bdd24823f9d8f03fe0cc86fd46f'
+
+      - name: Install dependencies from vcpkg
+        run: |
+          PATH=$PATH:${{ env.llvm_path }}/bin
+          # tell vcpkg to only build Release variants of the dependencies
+          cd ${{ env.RUNVCPKG_VCPKG_ROOT }}
+          echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-dynamic.cmake
+          echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-static.cmake
+          packages='zziplib icu harfbuzz[graphite2] cairo pixman libgd freetype libpng'
+          ./vcpkg upgrade 
+          ./vcpkg install $packages --triplet arm64-mingw-dynamic --host-triplet=arm64-linux-release --clean-after-build
+          cd installed/arm64-mingw-dynamic/lib/
+          ln libzlib.dll.a libz.dll.a
+
+      - name: Build
+        run: |
+          vcpkg_dir=${{ env.RUNVCPKG_VCPKG_ROOT }}
+          chmod 755 build-cross.sh
+          ./build-cross.sh
