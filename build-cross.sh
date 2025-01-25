@@ -50,8 +50,8 @@ function cmakeplusinstall {
 }
 
 function gnumakeplusinstall {
-    make -j $(nproc) || true
-    make install || true
+    make -j $(nproc)
+    make install
 }
 
 mkdir -p src
@@ -62,6 +62,7 @@ cd src
 [ -d texlive-$tlversion-source ] || $wget https://mirrors.ctan.org/systems/texlive/Source/texlive-$tlversion-source.tar.xz
 tar xf texlive-$tlversion-source.tar.xz
 cd texlive-$tlversion-source
+sed -i 's|\./himktables\$(EXEEXT)|himktables|' texk/web2c/Makefile.in 
 mkdir build-woa
 cd build-woa
 ../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu  --with-system-zziplib --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib --disable-luajittex --disable-luajithbtex --disable-mfluajit
