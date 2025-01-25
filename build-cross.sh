@@ -66,4 +66,36 @@ sed -i 's|\./himktables\$(EXEEXT)|himktables|' texk/web2c/Makefile.in
 mkdir build-woa
 cd build-woa
 ../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu  --with-system-zziplib --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib --disable-luajittex --disable-luajithbtex --disable-mfluajit
-gnumakeplusinstall
+make -j $(nproc)
+
+# build launchers (copy from MSYS2)
+cp "libs/lua53/.libs/texlua.dll" ../texk/texlive/windows_mingw_wrapper
+cp "libs/lua53/.libs/libtexlua53.dll.a" ../texk/texlive/windows_mingw_wrapper
+pushd ../texk/texlive/windows_mingw_wrapper
+
+echo '1 ICON "tlmgr.ico"'>texlive.rc
+$TARGET-windres texlive.rc texlive.o
+
+$TARGET-gcc -Os -s -shared -Wl,--out-implib=librunscript.dll.a -o runscript.dll runscript_dll.c -L./ -ltexlua53
+$TARGET-gcc -Os -s -o runscript.exe runscript_exe.c texlive.o -L./ -lrunscript
+$TARGET-gcc -mwindows -Os -s -o wrunscript.exe wrunscript_exe.c texlive.o -L./ -lrunscript
+
+cd context
+$TARGET-gcc -Os -s -shared -Wl,--out-implib=libmtxrun.dll.a -o mtxrun.dll mtxrun_dll.c
+$TARGET-gcc -Os -s -o mtxrun.exe mtxrun_exe.c -L./ -lmtxrun
+
+popd
+
+# install
+make install-strip
+make texlinks
+
+# install mtxrun.dll (copy from MSYS2)
+install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.dll" \
+    "$workdir/install/texlive/bin/mtxrun.dll"
+
+for _script in context contextjit luatools mtxrun mtxrunjit texexec texmfstart
+do
+install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.exe" \
+    "$workdir/install/texlive/bin/${_script}.exe"
+done
