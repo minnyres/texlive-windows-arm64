@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 prefix_dir=$PWD/texlive-windows-arm64
+workdir=$PWD
 mkdir -p "$prefix_dir"
 [ -z "$vcpkg_dir" ] && vcpkg_dir=$PWD/vcpkg
 vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic
