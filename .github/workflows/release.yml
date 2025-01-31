@@ -77,5 +77,40 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: temp-upload
+          path: upload
+
+  package:
+    name: Package
+    needs: [build-windows-arm64] # build-linux-win,macosx-qt5 is disabled
+    runs-on: windows-latest
+    
+    steps:
+      - name: Download temp artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: temp-upload
+
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: temp-upload
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: p7zip mingw-w64-ucrt-x86_64-ntldd
+
+      - name: copy dlls in MSYS2
+        shell: msys2 {0}
+        run: |       
+          cd temp-upload
+          ntldd -R --search-dir ./vcpkg-dll windows/*.exe | awk '{print $3}'| grep vcpkg  | sed 's|\\|/|g' | xargs -I{} cp -u {} windows
+          7z a -mx9 texlive-mingw-arm64.7z windows
+          mv texlive-mingw-arm64.7z ..
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
           name: texlive-mingw-arm64
           path: texlive-mingw-arm64.7z

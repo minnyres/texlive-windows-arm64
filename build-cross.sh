@@ -103,8 +103,12 @@ done
 
 # package
 cd $prefix_dir
-cp ./bin ./windows -r
-$TARGET-strip ./windows/*.exe
-$TARGET-strip ./windows/*.dll
-7z a -mx9 texlive-mingw-arm64.7z windows
-mv texlive-mingw-arm64.7z $workdir
+mkdir -p $workdir/upload/windows
+mkdir -p $workdir/upload/vcpkg-dll
+cp -r ./bin/* $workdir/upload/windows/
+cp $llvm_dir/aarch64-w64-mingw32/bin/libc++.dll $workdir/upload/windows/
+cp $llvm_dir/aarch64-w64-mingw32/bin/libunwind.dll $workdir/upload/windows/
+cp -r $vcpkg_libs_dir/bin/*.dll $workdir/upload/vcpkg-dll
+$TARGET-strip $workdir/upload/windows/*.exe
+$TARGET-strip $workdir/upload/windows/*.dll
+$TARGET-strip $workdir/upload/vcpkg-dll/*.dll
