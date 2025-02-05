@@ -11,6 +11,7 @@ wget="wget -nc --progress=bar:force"
 gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
+tlcommithash=72e553ad9359226fae15e67b0af8632b2b0ba132
 
 export PATH=$llvm_dir/bin:$PATH
 export TARGET=aarch64-w64-mingw32
@@ -60,13 +61,23 @@ mkdir -p $prefix_dir/lib/pkgconfig/
 cd src
 
 # texlive
-[ -d texlive-$tlversion-source ] || $wget https://mirrors.ctan.org/systems/texlive/Source/texlive-$tlversion-source.tar.xz
-tar xf texlive-$tlversion-source.tar.xz
-cd texlive-$tlversion-source
+usetlsrctarball=0
+if [[ $usetlsrctarball -eq 1 ]]
+then
+    [ -d texlive-$tlversion-source ] || $wget https://mirrors.ctan.org/systems/texlive/Source/texlive-$tlversion-source.tar.xz
+    tar xf texlive-$tlversion-source.tar.xz
+    cd texlive-$tlversion-source
+else
+    [ -d texlive-source ] || git clone https://github.com/TeX-Live/texlive-source
+    cd texlive-source
+    git checkout $tlcommithash
+fi
+
+
 sed -i 's|\./himktables\$(EXEEXT)|himktables|' texk/web2c/Makefile.in 
 mkdir build-woa
 cd build-woa
-../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu  --with-system-zziplib --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib --disable-luajittex --disable-luajithbtex --disable-mfluajit
+../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu  --with-system-zziplib --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib
 make -j $(nproc)
 
 # build launchers (copy from MSYS2)
@@ -112,3 +123,31 @@ cp -r $vcpkg_libs_dir/bin/*.dll $workdir/upload/vcpkg-dll
 $TARGET-strip $workdir/upload/windows/*.exe
 $TARGET-strip $workdir/upload/windows/*.dll
 $TARGET-strip $workdir/upload/vcpkg-dll/*.dll
+cd $workdir/upload/windows
+cp euptex.exe uplatex.exe
+cp luatex.exe dvilualatex.exe
+cp luatex.exe dviluatex.exe
+cp luahbtex.exe lualatex.exe
+cp pdftex.exe amstex.exe
+cp pdftex.exe cslatex.exe
+cp pdftex.exe csplain.exe
+cp pdftex.exe eplain.exe
+cp pdftex.exe etex.exe
+cp pdftex.exe jadetex.exe
+cp pdftex.exe latex.exe
+cp tex.exe lollipop.exe
+cp pdftex.exe mex.exe
+cp pdftex.exe mllatex.exe
+cp pdftex.exe mltex.exe
+cp pdftex.exe pdfetex.exe
+cp pdftex.exe pdfcslatex.exe
+cp pdftex.exe pdfcsplain.exe
+cp pdftex.exe pdfjadetex.exe
+cp pdftex.exe pdflatex.exe
+cp pdftex.exe pdfmex.exe
+cp pdftex.exe pdfxmltex.exe
+cp pdftex.exe texsis.exe
+cp pdftex.exe utf8mex.exe
+cp pdftex.exe xmltex.exe
+cp xetex.exe xelatex.exe
+cp epstopdf.exe repstopdf.exe
