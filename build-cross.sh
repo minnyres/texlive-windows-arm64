@@ -25,7 +25,7 @@ export STRIP=$TARGET-strip
 export CFLAGS="-O2 -I$prefix_dir/include -I$vcpkg_libs_dir/include"
 export CXXFLAGS=$CFLAGS
 export CPPFLAGS="-I$prefix_dir/include -I$vcpkg_libs_dir/include"
-export LDFLAGS="-s -L$prefix_dir/lib -L$vcpkg_libs_dir/lib"
+export LDFLAGS="-s -L$prefix_dir/lib -L$vcpkg_libs_dir/lib -Wl,--allow-multiple-definition"
 
 # anything that uses pkg-config
 export PKG_CONFIG=/usr/bin/pkg-config
@@ -33,7 +33,7 @@ export PKG_CONFIG_LIBDIR="$prefix_dir/lib/pkgconfig:$vcpkg_libs_dir/lib/pkgconfi
 export PKG_CONFIG_PATH=$PKG_CONFIG_LIBDIR
 
 # autotools(-like)
-commonflags="--prefix=$prefix_dir --build=aarch64-linux-gnu --host=$TARGET --enable-static=no --enable-shared --disable-debug"
+commonflags="--prefix=$prefix_dir --build=x86_64-linux-gnu --host=$TARGET --enable-static=no --enable-shared --disable-debug"
 
 # CMake
 cmake_args=(
