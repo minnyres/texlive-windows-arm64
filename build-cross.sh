@@ -77,7 +77,7 @@ fi
 sed -i 's|\./himktables\$(EXEEXT)|himktables|' texk/web2c/Makefile.in 
 mkdir build-woa
 cd build-woa
-../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu  --with-system-zziplib --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib
+../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib
 make -j $(nproc)
 
 # build launchers (copy from MSYS2)
