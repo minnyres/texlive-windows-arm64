@@ -125,22 +125,30 @@ $TARGET-strip $workdir/upload/windows/*.dll
 $TARGET-strip $workdir/upload/vcpkg-dll/*.dll
 cd $workdir/upload/windows
 cp euptex.exe uplatex.exe
+cp euptex.exe uptex.exe
+cp euptex.exe eptex.exe
+cp euptex.exe platex.exe 
+cp euptex.exe ptex.exe
+cp epstopdf.exe repstopdf.exe
+cp gbklatex.exe "bg5+latex.exe"
+cp gbkpdflatex.exe "bg5+pdflatex.exe"
+cp hitex.exe hilatex.exe
 cp luatex.exe dvilualatex.exe
 cp luatex.exe dviluatex.exe
+cp luatex.exe luacsplain.exe
 cp luahbtex.exe lualatex.exe
+cp mpost.exe r-mpost.exe
+cp pmpost.exe r-pmpost.exe
 cp pdftex.exe amstex.exe
-cp pdftex.exe cslatex.exe
 cp pdftex.exe csplain.exe
 cp pdftex.exe eplain.exe
 cp pdftex.exe etex.exe
 cp pdftex.exe jadetex.exe
 cp pdftex.exe latex.exe
-cp tex.exe lollipop.exe
 cp pdftex.exe mex.exe
 cp pdftex.exe mllatex.exe
 cp pdftex.exe mltex.exe
 cp pdftex.exe pdfetex.exe
-cp pdftex.exe pdfcslatex.exe
 cp pdftex.exe pdfcsplain.exe
 cp pdftex.exe pdfjadetex.exe
 cp pdftex.exe pdflatex.exe
@@ -149,5 +157,11 @@ cp pdftex.exe pdfxmltex.exe
 cp pdftex.exe texsis.exe
 cp pdftex.exe utf8mex.exe
 cp pdftex.exe xmltex.exe
+cp tex.exe lollipop.exe
 cp xetex.exe xelatex.exe
-cp epstopdf.exe repstopdf.exe
+cp xdvipdfmx.exe ebb.exe
+cp upbibtex.exe pbibtex.exe
+cp updvitype.exe pdvitype.exe
+cp uptftopl.exe ptftopl.exe
+cp uppltotf.exe ppltotf.exe
+cp upmpost.exe r-upmpost.exe
