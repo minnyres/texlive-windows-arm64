@@ -11,7 +11,7 @@ wget="wget -nc --progress=bar:force"
 gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
-tlcommithash=72e553ad9359226fae15e67b0af8632b2b0ba132
+tlcommithash=8d2ad886a4b0dfa1d5207562d38bc859108246df
 
 export PATH=$llvm_dir/bin:$PATH
 export TARGET=aarch64-w64-mingw32
@@ -74,9 +74,12 @@ else
 fi
 
 
-sed -i 's|\./himktables\$(EXEEXT)|himktables|' texk/web2c/Makefile.in 
+sed -i 's|\./himktables\$(EXEEXT)|#\./himktables\$(EXEEXT)|' texk/web2c/Makefile.in 
+find . -name hitables.c
 mkdir build-woa
 cd build-woa
+mkdir -p texk/web2c
+cp ../texk/web2c/hitexdir/hitables.c texk/web2c
 ../configure $commonflags --disable-native-texlive-build --disable-multiplatform --with-system-harfbuzz  --with-system-icu --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib
 make -j $(nproc)
 
