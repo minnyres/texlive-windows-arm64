@@ -2,7 +2,7 @@
 
 prefix_dir=$PWD/texlive-windows-arm64
 workdir=$PWD
-mkdir -p "$prefix_dir"
+mkdir -p "$prefix_dir/bin"
 [ -z "$vcpkg_dir" ] && vcpkg_dir=$PWD/vcpkg
 vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic
 [ -z "$llvm_dir" ] && llvm_dir=$PWD/llvm-mingw
@@ -56,8 +56,57 @@ function gnumakeplusinstall {
     make install
 }
 
+function buildcallexe {
+    $TARGET-gcc -Os -s -DEXEPROG=\"$1.exe\" -o "$2.exe" callexe.c
+    install -D -m755 "$2.exe" "$prefix_dir/bin/$2.exe"
+}
+
+function tlmklinks {
+    buildcallexe euptex uplatex
+    buildcallexe euptex uptex
+    buildcallexe euptex eptex
+    buildcallexe euptex platex 
+    buildcallexe euptex ptex
+    buildcallexe epstopdf repstopdf
+    buildcallexe gbklatex "bg5+latex"
+    buildcallexe gbkpdflatex "bg5+pdflatex"
+    buildcallexe hitex hilatex
+    buildcallexe luatex dvilualatex
+    buildcallexe luatex dviluatex
+    buildcallexe luatex luacsplain
+    buildcallexe luahbtex lualatex
+    buildcallexe mpost r-mpost
+    buildcallexe pmpost r-pmpost
+    buildcallexe pdftex amstex
+    buildcallexe pdftex csplain
+    buildcallexe pdftex eplain
+    buildcallexe pdftex etex
+    buildcallexe pdftex jadetex
+    buildcallexe pdftex latex
+    buildcallexe pdftex mex
+    buildcallexe pdftex mllatex
+    buildcallexe pdftex mltex
+    buildcallexe pdftex pdfetex
+    buildcallexe pdftex pdfcsplain
+    buildcallexe pdftex pdfjadetex
+    buildcallexe pdftex pdflatex
+    buildcallexe pdftex pdfmex
+    buildcallexe pdftex pdfxmltex
+    buildcallexe pdftex texsis
+    buildcallexe pdftex utf8mex
+    buildcallexe pdftex xmltex
+    buildcallexe tex lollipop
+    buildcallexe xetex xelatex
+    buildcallexe xdvipdfmx ebb
+    buildcallexe upbibtex pbibtex
+    buildcallexe updvitype pdvitype
+    buildcallexe uptftopl ptftopl
+    buildcallexe uppltotf ppltotf
+    buildcallexe upmpost r-upmpost
+}
+
 mkdir -p src
-mkdir -p $prefix_dir/lib/pkgconfig/ 
+# mkdir -p $prefix_dir/lib/pkgconfig/ 
 cd src
 
 # texlive
@@ -75,7 +124,7 @@ fi
 
 
 sed -i 's|\./himktables\$(EXEEXT)|#\./himktables\$(EXEEXT)|' texk/web2c/Makefile.in 
-find . -name hitables.c
+# find . -name hitables.c
 mkdir build-woa
 cd build-woa
 mkdir -p texk/web2c
@@ -87,6 +136,8 @@ make -j $(nproc)
 cp "libs/lua53/.libs/texlua.dll" ../texk/texlive/windows_mingw_wrapper
 cp "libs/lua53/.libs/libtexlua53.dll.a" ../texk/texlive/windows_mingw_wrapper
 pushd ../texk/texlive/windows_mingw_wrapper
+
+tlmklinks
 
 echo '1 ICON "tlmgr.ico"'>texlive.rc
 $TARGET-windres texlive.rc texlive.o
@@ -103,7 +154,7 @@ popd
 
 # install
 make install
-make texlinks
+# make texlinks
 
 # install mtxrun.dll (copy from MSYS2)
 install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.dll" \
@@ -126,45 +177,3 @@ cp -r $vcpkg_libs_dir/bin/*.dll $workdir/upload/vcpkg-dll
 $TARGET-strip $workdir/upload/windows/*.exe
 $TARGET-strip $workdir/upload/windows/*.dll
 $TARGET-strip $workdir/upload/vcpkg-dll/*.dll
-cd $workdir/upload/windows
-cp euptex.exe uplatex.exe
-cp euptex.exe uptex.exe
-cp euptex.exe eptex.exe
-cp euptex.exe platex.exe 
-cp euptex.exe ptex.exe
-cp epstopdf.exe repstopdf.exe
-cp gbklatex.exe "bg5+latex.exe"
-cp gbkpdflatex.exe "bg5+pdflatex.exe"
-cp hitex.exe hilatex.exe
-cp luatex.exe dvilualatex.exe
-cp luatex.exe dviluatex.exe
-cp luatex.exe luacsplain.exe
-cp luahbtex.exe lualatex.exe
-cp mpost.exe r-mpost.exe
-cp pmpost.exe r-pmpost.exe
-cp pdftex.exe amstex.exe
-cp pdftex.exe csplain.exe
-cp pdftex.exe eplain.exe
-cp pdftex.exe etex.exe
-cp pdftex.exe jadetex.exe
-cp pdftex.exe latex.exe
-cp pdftex.exe mex.exe
-cp pdftex.exe mllatex.exe
-cp pdftex.exe mltex.exe
-cp pdftex.exe pdfetex.exe
-cp pdftex.exe pdfcsplain.exe
-cp pdftex.exe pdfjadetex.exe
-cp pdftex.exe pdflatex.exe
-cp pdftex.exe pdfmex.exe
-cp pdftex.exe pdfxmltex.exe
-cp pdftex.exe texsis.exe
-cp pdftex.exe utf8mex.exe
-cp pdftex.exe xmltex.exe
-cp tex.exe lollipop.exe
-cp xetex.exe xelatex.exe
-cp xdvipdfmx.exe ebb.exe
-cp upbibtex.exe pbibtex.exe
-cp updvitype.exe pdvitype.exe
-cp uptftopl.exe ptftopl.exe
-cp uppltotf.exe ppltotf.exe
-cp upmpost.exe r-upmpost.exe
