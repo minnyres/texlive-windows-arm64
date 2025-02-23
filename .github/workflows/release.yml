@@ -19,16 +19,16 @@ jobs:
           sudo apt update
           sudo apt install \
             build-essential p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texlive-binaries texinfo bison flex m4 libtool libx11-dev
-          wget https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64.tar.xz
+          wget https://github.com/mstorsjo/llvm-mingw/releases/download/20240619/llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64.tar.xz
           tar -xf llvm-mingw-*.tar.xz
-          mv llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64 llvm-mingw
+          mv llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64 llvm-mingw
           
       - name: Setup a new (or from cache) vcpkg (and does not build any package)
         uses: lukka/run-vcpkg@v11 # Always specify the specific _version_ of the
                                   # action you need, `v11` in this case to stay up
                                   # to date with fixes on the v11 branch
         with:
-          vcpkgGitCommitId: 'b322364f06308bdd24823f9d8f03fe0cc86fd46f'
+          vcpkgGitCommitId: 'd5ec528843d29e3a52d745a64b469f810b2cedbf'
 
       # - name: Cache TL host tool
       #   id: cache-tl-host-bin

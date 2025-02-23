@@ -11,7 +11,7 @@ wget="wget -nc --progress=bar:force"
 gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
-tlcommithash=8d2ad886a4b0dfa1d5207562d38bc859108246df
+tlcommithash=252b7348a26bbd8c29c7e379017863cffc3a8a14
 
 export PATH=$llvm_dir/bin:$PATH
 export TARGET=aarch64-w64-mingw32
