@@ -58,10 +58,18 @@ function gnumakeplusinstall {
 
 function buildcallexe {
     $TARGET-gcc -Os -s -DEXEPROG=\"$1.exe\" -o "$2.exe" callexe.c
+    rm -rf "$prefix_dir/bin/$2.exe"
     install -D -m755 "$2.exe" "$prefix_dir/bin/$2.exe"
 }
 
+function buildcallscripts {
+    $TARGET-g++ -Os -s -DSCRIPTLINK=\"$2\" -DINTERPRETER=\"$3\" -o "$1.exe" callscripts.cpp
+    rm -rf "$prefix_dir/bin/$1.exe"
+    install -D -m755 "$1.exe" "$prefix_dir/bin/$1.exe"
+}
+
 function tlmklinks {
+    cd ../texk/texlive/windows_mingw_wrapper
     buildcallexe euptex uplatex
     buildcallexe euptex uptex
     buildcallexe euptex eptex
@@ -103,10 +111,12 @@ function tlmklinks {
     buildcallexe uptftopl ptftopl
     buildcallexe uppltotf ppltotf
     buildcallexe upmpost r-upmpost
+    cd $workdir/wrappers
+    buildcallscripts latexmk ../../texmf-dist/scripts/latexmk/latexmk.pl
+    buildcallscripts epstopdf ../../texmf-dist/scripts/epstopdf/epstopdf.pl
 }
 
 mkdir -p src
-# mkdir -p $prefix_dir/lib/pkgconfig/ 
 cd src
 
 # texlive
@@ -124,7 +134,6 @@ fi
 
 
 sed -i 's|\./himktables\$(EXEEXT)|#\./himktables\$(EXEEXT)|' texk/web2c/Makefile.in 
-# find . -name hitables.c
 mkdir build-woa
 cd build-woa
 mkdir -p texk/web2c
@@ -136,8 +145,6 @@ make -j $(nproc)
 cp "libs/lua53/.libs/texlua.dll" ../texk/texlive/windows_mingw_wrapper
 cp "libs/lua53/.libs/libtexlua53.dll.a" ../texk/texlive/windows_mingw_wrapper
 pushd ../texk/texlive/windows_mingw_wrapper
-
-tlmklinks
 
 echo '1 ICON "tlmgr.ico"'>texlive.rc
 $TARGET-windres texlive.rc texlive.o
@@ -154,7 +161,6 @@ popd
 
 # install
 make install
-# make texlinks
 
 # install mtxrun.dll (copy from MSYS2)
 install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.dll" \
@@ -165,6 +171,9 @@ do
 install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.exe" \
     "$prefix_dir/bin/${_script}.exe"
 done
+
+# make links
+tlmklinks
 
 # package
 cd $prefix_dir
