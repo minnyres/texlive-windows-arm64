@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install \
-            build-essential p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texlive-binaries texinfo bison flex m4 libtool libx11-dev
+            build-essential p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texinfo bison flex m4 libtool libx11-dev clisp texlive-binaries
           wget https://github.com/mstorsjo/llvm-mingw/releases/download/20240619/llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64.tar.xz
           tar -xf llvm-mingw-*.tar.xz
           mv llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64 llvm-mingw
