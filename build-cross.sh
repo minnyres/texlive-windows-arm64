@@ -138,7 +138,7 @@ mkdir build-woa
 cd build-woa
 mkdir -p texk/web2c
 cp ../texk/web2c/hitexdir/hitables.c texk/web2c
-../configure $commonflags --disable-native-texlive-build --disable-cxx-runtime-hack --disable-multiplatform --with-system-harfbuzz --with-system-icu --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib --enable-xindy --disable-xindy-docs --disable-xindy-rules
+../configure $commonflags --disable-native-texlive-build --disable-cxx-runtime-hack --disable-multiplatform --with-system-harfbuzz --with-system-icu --with-system-graphite2 --with-system-cairo --with-system-pixman --with-system-gd --with-system-freetype2 --with-system-libpng  --with-system-zlib --enable-xindy --disable-xindy-docs --disable-xindy-rules --enable-tex-synctex --enable-mflua-nowin --enable-mfluajit-nowin
 make -j $(nproc)
 
 # build launchers (copy from MSYS2)
