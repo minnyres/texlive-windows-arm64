@@ -4,8 +4,8 @@ on:
   push:
 
 jobs:
-  build-windows-arm64:
-    name: Build
+  build-texlive-arm64:
+    name: Build TL
     runs-on: ubuntu-latest
     env:
       llvm_path: "${{ github.workspace }}/llvm-mingw"
@@ -79,23 +79,53 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: temp-upload
+          name: texlive-upload
           path: upload
+
+  build-luametatex-arm64:
+    name: Build LuaMetaTeX 
+    runs-on: windows-latest
+    env:
+      luametatex_version: "2.11.05"
+
+    steps:
+      - name: Setup devcmd
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64_arm64
+
+      - name: Install build tools
+        run: |
+          choco install ninja
+
+      - name: Build
+        run: |
+          git clone --depth 1 --branch v${{ env.luametatex_version }} https://github.com/contextgarden/luametatex
+          cd luametatex
+          cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          cp build/luametatex.exe ${{ github.workspace }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: luametatex-upload
+          path: luametatex.exe
 
   package:
     name: Package
-    needs: [build-windows-arm64] # build-linux-win,macosx-qt5 is disabled
+    needs: [build-texlive-arm64,build-luametatex-arm64] # build-linux-win,macosx-qt5 is disabled
     runs-on: windows-latest
     
     steps:
       - name: Download temp artifacts
         uses: actions/download-artifact@v4
-        with:
-          pattern: temp-upload
 
       - uses: geekyeggo/delete-artifact@v5
         with:
-          name: temp-upload
+          name: |
+            texlive-upload
+            luametatex-upload
 
       - uses: msys2/setup-msys2@v2
         with:
@@ -106,8 +136,9 @@ jobs:
       - name: copy dlls in MSYS2
         shell: msys2 {0}
         run: |       
-          cd temp-upload
+          cd texlive-upload
           ntldd -R --search-dir ./vcpkg-dll windows/*.exe | awk '{print $3}'| grep vcpkg  | sed 's|\\|/|g' | xargs -I{} cp -u {} windows
+          mv ../luametatex-upload/luametatex.exe windows
           7z a -mx9 texlive-mingw-arm64.7z windows
           mv texlive-mingw-arm64.7z ..
 
