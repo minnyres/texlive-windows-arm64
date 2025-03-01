@@ -110,7 +110,7 @@ jobs:
         run: |
           git clone --depth 1 --branch ${{ env.asymptote_version }} https://github.com/vectorgraphics/asymptote
           cd asymptote
-          cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${{ env.RUNVCPKG_VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=arm64-windows-static-md
+          cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${{ env.RUNVCPKG_VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=arm64-windows-static-md -DENABLE_CUDA_ASY_REFLECT=OFF -DENABLE_ASY_CXXTEST=OFF -DENABLE_LSP=OFF -DENABLE_CURL=OFF -DENABLE_FFTW3=OFF 
           cmake --build build
           cp build/asy.exe ${{ github.workspace }}
 
