@@ -123,12 +123,14 @@ cd src
 # asymptote
 [ -d asymptote ] || $gitclone --branch $asymptote_ver https://github.com/vectorgraphics/asymptote
 pushd asymptote
+sed -i 's|_MSC_VER|_WIN32|' psfile.cc 
+sed -i 's|_MSC_VER|_WIN32|' settings.h
 ./autogen.sh
-LDFLAGS="$LDFLAGS -latomic_ops" ./configure $commonflags  --enable-texlive-build 
 cd gc
-./configure --build=x86_64-linux-gnu --host=$TARGET --enable-static --enable-shared=no
+./configure --build=x86_64-linux-gnu --host=$TARGET --enable-static --enable-shared=no --enable-cplusplus --enable-throw-bad-alloc-library
 make -j $(nproc) 
 cd ..
+LDFLAGS="$LDFLAGS gc/.libs/libgccpp.a -lshlwapi -lole32" ./configure --build=x86_64-linux-gnu --host=$TARGET --enable-texlive-build 
 sed -i 's|-std=c++17| |' Makefile 
 ln $llvm_dir/generic-w64-mingw32/include/winsock2.h $llvm_dir/generic-w64-mingw32/include/Winsock2.h
 ln $llvm_dir/generic-w64-mingw32/include/windows.h $llvm_dir/generic-w64-mingw32/include/Windows.h
