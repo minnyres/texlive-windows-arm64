@@ -72,7 +72,7 @@ jobs:
 
       - name: Build
         run: |
-          vcpkg_dir=${{ env.RUNVCPKG_VCPKG_ROOT }}
+          export vcpkg_dir=${{ env.RUNVCPKG_VCPKG_ROOT }}
           chmod 755 build-cross.sh
           ./build-cross.sh
 
@@ -83,10 +83,11 @@ jobs:
           path: upload
 
   build-luametatex-arm64:
-    name: Build LuaMetaTeX 
+    name: Build LuaMetaTeX and ...
     runs-on: windows-latest
     env:
       luametatex_version: "2.11.05"
+      asymptote_version: "3.02git"
 
     steps:
       - name: Setup devcmd
@@ -94,11 +95,26 @@ jobs:
         with:
           arch: amd64_arm64
 
+      - name: Setup a new (or from cache) vcpkg (and does not build any package)
+        uses: lukka/run-vcpkg@v11 # Always specify the specific _version_ of the
+                                  # action you need, `v11` in this case to stay up
+                                  # to date with fixes on the v11 branch
+        with:
+          vcpkgGitCommitId: 'd5ec528843d29e3a52d745a64b469f810b2cedbf'
+
       - name: Install build tools
         run: |
           choco install ninja
 
-      - name: Build
+      - name: Build Asymptote
+        run: |
+          git clone --depth 1 --branch ${{ env.asymptote_version }} https://github.com/vectorgraphics/asymptote
+          cd asymptote
+          cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${{ env.RUNVCPKG_VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=arm64-windows-static-md
+          cmake --build build
+          cp build/asy.exe ${{ github.workspace }}
+
+      - name: Build LuaMetaTeX
         run: |
           git clone --depth 1 --branch v${{ env.luametatex_version }} https://github.com/contextgarden/luametatex
           cd luametatex
