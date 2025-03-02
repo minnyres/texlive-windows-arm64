@@ -11,7 +11,7 @@ wget="wget -nc --progress=bar:force"
 gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
-tlcommithash=252b7348a26bbd8c29c7e379017863cffc3a8a14
+tlcommithash=bc2b83b09ba191c546cc178682e475b3de7f37a6
 # asymptote_ver=3.02git
 
 export PATH=$llvm_dir/bin:$PATH
