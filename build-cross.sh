@@ -12,7 +12,7 @@ gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
 tlcommithash=252b7348a26bbd8c29c7e379017863cffc3a8a14
-asymptote_ver=3.02git
+# asymptote_ver=3.02git
 
 export PATH=$llvm_dir/bin:$PATH
 export TARGET=aarch64-w64-mingw32
@@ -120,26 +120,6 @@ function tlmklinks {
 mkdir -p src
 cd src
 
-# asymptote
-[ -d asymptote ] || $gitclone --branch $asymptote_ver https://github.com/vectorgraphics/asymptote
-pushd asymptote
-sed -i 's|_MSC_VER|_WIN32|' psfile.cc 
-sed -i 's|_MSC_VER|_WIN32|' settings.h
-./autogen.sh
-cd gc
-./configure --build=x86_64-linux-gnu --host=$TARGET --enable-static --enable-shared=no --enable-cplusplus --enable-throw-bad-alloc-library
-make -j $(nproc) 
-cd ..
-LDFLAGS="$LDFLAGS gc/.libs/libgccpp.a -lshlwapi -lole32" ./configure --build=x86_64-linux-gnu --host=$TARGET --enable-texlive-build 
-sed -i 's|-std=c++17| |' Makefile 
-ln $llvm_dir/generic-w64-mingw32/include/winsock2.h $llvm_dir/generic-w64-mingw32/include/Winsock2.h
-ln $llvm_dir/generic-w64-mingw32/include/windows.h $llvm_dir/generic-w64-mingw32/include/Windows.h
-ln $llvm_dir/generic-w64-mingw32/include/shlwapi.h $llvm_dir/generic-w64-mingw32/include/Shlwapi.h
-ln $llvm_dir/generic-w64-mingw32/include/shellapi.h $llvm_dir/generic-w64-mingw32/include/Shellapi.h
-make -j $(nproc)
-cp asy.exe $prefix_dir/bin 
-popd
-
 # texlive
 usetlsrctarball=0
 if [[ $usetlsrctarball -eq 1 ]]
@@ -182,6 +162,25 @@ popd
 
 # install
 make install
+
+# asymptote
+pushd ../utils/asymptote
+sed -i 's|_MSC_VER|_WIN32|' psfile.cc 
+sed -i 's|_MSC_VER|_WIN32|' settings.h
+./autogen.sh
+cd gc
+./configure --build=x86_64-linux-gnu --host=$TARGET --enable-static --enable-shared=no --enable-cplusplus --enable-throw-bad-alloc-library
+make -j $(nproc) 
+cd ..
+LDFLAGS="$LDFLAGS gc/.libs/libgccpp.a -lshlwapi -lole32" ./configure --build=x86_64-linux-gnu --host=$TARGET --enable-texlive-build 
+sed -i 's|-std=c++17| |' Makefile 
+ln $llvm_dir/generic-w64-mingw32/include/winsock2.h $llvm_dir/generic-w64-mingw32/include/Winsock2.h
+ln $llvm_dir/generic-w64-mingw32/include/windows.h $llvm_dir/generic-w64-mingw32/include/Windows.h
+ln $llvm_dir/generic-w64-mingw32/include/shlwapi.h $llvm_dir/generic-w64-mingw32/include/Shlwapi.h
+ln $llvm_dir/generic-w64-mingw32/include/shellapi.h $llvm_dir/generic-w64-mingw32/include/Shellapi.h
+make -j $(nproc) 
+cp asy.exe $prefix_dir/bin 
+popd
 
 # install mtxrun.dll (copy from MSYS2)
 install -D -m755 "../texk/texlive/windows_mingw_wrapper/context/mtxrun.dll" \
