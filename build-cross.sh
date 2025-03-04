@@ -23,7 +23,7 @@ export NM=$TARGET-nm
 export RANLIB=$TARGET-ranlib
 export STRIP=$TARGET-strip
 
-export CFLAGS="-O2 -I$prefix_dir/include -I$vcpkg_libs_dir/include"
+export CFLAGS="-O2 -g0 -I$prefix_dir/include -I$vcpkg_libs_dir/include"
 export CXXFLAGS=$CFLAGS
 export CPPFLAGS="-I$prefix_dir/include -I$vcpkg_libs_dir/include -Wno-error=incompatible-function-pointer-types"
 export LDFLAGS="-s -L$prefix_dir/lib -L$vcpkg_libs_dir/lib" # -Wl,--allow-multiple-definition"
@@ -58,63 +58,238 @@ function gnumakeplusinstall {
 }
 
 function buildcallexe {
-    $TARGET-gcc -Os -s -DEXEPROG=\"$1.exe\" -o "$2.exe" callexe.c
+    $TARGET-gcc $CXXFLAGS $LDFLAGS -DEXEPROG=\"$1.exe\" -o "$2.exe" callexe.c
     rm -rf "$prefix_dir/bin/$2.exe"
     install -D -m755 "$2.exe" "$prefix_dir/bin/$2.exe"
 }
 
 function buildcallscripts {
-    $TARGET-g++ -Os -s -DSCRIPTLINK=\"$2\" -DINTERPRETER=\"$3\" -o "$1.exe" callscripts.cpp
+    $TARGET-g++ $CXXFLAGS $LDFLAGS -DSCRIPTLINK=\"$2\" -DINTERPRETER=\"$3.exe\" -o "$1.exe" -lkpathsea  callscripts.cpp
     rm -rf "$prefix_dir/bin/$1.exe"
     install -D -m755 "$1.exe" "$prefix_dir/bin/$1.exe"
 }
 
 function tlmklinks {
     cd ../texk/texlive/windows_mingw_wrapper
-    buildcallexe euptex uplatex
-    buildcallexe euptex uptex
-    buildcallexe euptex eptex
-    buildcallexe euptex platex 
-    buildcallexe euptex ptex
-    buildcallexe epstopdf repstopdf
-    buildcallexe gbklatex "bg5+latex"
-    buildcallexe gbkpdflatex "bg5+pdflatex"
-    buildcallexe hitex hilatex
+    buildcallexe pdftex amstex
+    buildcallexe cluttex cllualatex
+    buildcallexe cluttex clxelatex
+    buildcallexe pdftex csplain
     buildcallexe luatex dvilualatex
+    buildcallexe luatex dvilualatex-dev
     buildcallexe luatex dviluatex
+    buildcallexe pdftex eplain
+    buildcallexe euptex eptex
+    buildcallexe xdvipdfmx extractbb
+    buildcallexe hitex hilatex
+    buildcallexe pdftex jadetex
+    buildcallexe texdef latexdef
+    buildcallexe pdftex latex-dev
+    buildcallexe tex lollipop
     buildcallexe luatex luacsplain
     buildcallexe luahbtex lualatex
-    buildcallexe mpost r-mpost
-    buildcallexe pmpost r-pmpost
-    buildcallexe pdftex amstex
-    buildcallexe pdftex csplain
-    buildcallexe pdftex eplain
-    buildcallexe pdftex etex
-    buildcallexe pdftex jadetex
-    buildcallexe pdftex latex
-    buildcallexe pdftex mex
+    buildcallexe luahbtex lualatex-dev
     buildcallexe pdftex mllatex
     buildcallexe pdftex mltex
-    buildcallexe pdftex pdfetex
+    buildcallexe luatex optex
     buildcallexe pdftex pdfcsplain
+    buildcallexe pdftex pdfetex
     buildcallexe pdftex pdfjadetex
-    buildcallexe pdftex pdflatex
+    buildcallexe pdftex pdflatex-dev
     buildcallexe pdftex pdfmex
     buildcallexe pdftex pdfxmltex
-    buildcallexe pdftex texsis
-    buildcallexe pdftex utf8mex
-    buildcallexe pdftex xmltex
-    buildcallexe tex lollipop
-    buildcallexe xetex xelatex
-    buildcallexe xdvipdfmx ebb
-    buildcallexe upbibtex pbibtex
-    buildcallexe updvitype pdvitype
-    buildcallexe uptftopl ptftopl
-    buildcallexe uppltotf ppltotf
+    buildcallexe euptex platex
+    buildcallexe euptex platex-dev
+    buildcallexe epstopdf repstopdf
+    buildcallexe mpost r-mpost
+    buildcallexe pdfcrop rpdfcrop
+    buildcallexe pmpost r-pmpost
     buildcallexe upmpost r-upmpost
+    buildcallexe pdftex texsis
+    buildcallexe euptex uplatex
+    buildcallexe euptex uplatex-dev
+    buildcallexe pdftex utf8mex
+    buildcallexe xetex xelatex-dev
+    buildcallexe pdftex xmltex
+    
     cd $workdir/wrappers
-    buildcallscripts latexmk ../../texmf-dist/scripts/latexmk/latexmk.pl
-    buildcallscripts epstopdf ../../texmf-dist/scripts/epstopdf/epstopdf.pl
+    buildcallscripts a2ping scripts/a2ping/a2ping.pl
+    buildcallscripts a5toa4 scripts/pfarrei/a5toa4.tlu
+    buildcallscripts afm2afm scripts/fontools/afm2afm perl
+    buildcallscripts albatross scripts/albatross/albatross.sh
+    buildcallscripts arara scripts/arara/arara.sh
+    buildcallscripts arlatex scripts/bundledoc/arlatex perl
+    buildcallscripts authorindex scripts/authorindex/authorindex perl
+    buildcallscripts autoinst scripts/fontools/autoinst perl
+    buildcallscripts bbl2bib scripts/crossrefware/bbl2bib.pl
+    buildcallscripts bib2gls scripts/bib2gls/bib2gls.sh
+    buildcallscripts bibcop scripts/bibcop/bibcop.pl
+    buildcallscripts bibdoiadd scripts/crossrefware/bibdoiadd.pl
+    buildcallscripts bibmradd scripts/crossrefware/bibmradd.pl
+    buildcallscripts biburl2doi scripts/crossrefware/biburl2doi.pl
+    buildcallscripts bibzbladd scripts/crossrefware/bibzbladd.pl
+    buildcallscripts bundledoc scripts/bundledoc/bundledoc perl
+    buildcallscripts cachepic scripts/cachepic/cachepic.tlu
+    buildcallscripts checkcites scripts/checkcites/checkcites.lua
+    buildcallscripts chklref scripts/chklref/chklref.pl
+    buildcallscripts citeproc-lua scripts/citation-style-language/citeproc-lua.lua
+    buildcallscripts cjk-gs-integrate scripts/cjk-gs-integrate/cjk-gs-integrate.pl
+    buildcallscripts cluttex scripts/cluttex/cluttex.lua
+    buildcallscripts convbkmk scripts/convbkmk/convbkmk.rb
+    buildcallscripts convertgls2bib scripts/bib2gls/convertgls2bib.sh
+    buildcallscripts ctanbib scripts/ctanbib/ctanbib texlua
+    buildcallscripts ctanify scripts/ctanify/ctanify perl
+    buildcallscripts ctan-o-mat scripts/ctan-o-mat/ctan-o-mat.pl
+    buildcallscripts ctanupload scripts/ctanupload/ctanupload.pl
+    buildcallscripts de-macro scripts/de-macro/de-macro python
+    buildcallscripts depythontex scripts/pythontex/depythontex.py
+    buildcallscripts deweb scripts/chktex/deweb.pl
+    buildcallscripts diadia scripts/diadia/diadia.lua
+    buildcallscripts digestif scripts/digestif/digestif.texlua
+    buildcallscripts dosepsbin scripts/dosepsbin/dosepsbin.pl
+    buildcallscripts dviasm scripts/dviasm/dviasm.py
+    buildcallscripts dviinfox scripts/dviinfox/dviinfox.pl
+    buildcallscripts e2pall scripts/texlive-extra/e2pall.pl
+    buildcallscripts ebong scripts/ebong/ebong.py
+    buildcallscripts edtx2dtx scripts/easydtx/edtx2dtx.pl
+    buildcallscripts eolang scripts/eolang/eolang.pl
+    buildcallscripts epspdf scripts/epspdf/epspdf.tlu
+    buildcallscripts epspdftk scripts/epspdf/epspdftk.tcl
+    buildcallscripts epstopdf scripts/epstopdf/epstopdf.pl
+    buildcallscripts exceltex scripts/exceltex/exceltex perl
+    buildcallscripts extractres scripts/psutils/extractres.pl
+    buildcallscripts fig4latex scripts/fig4latex/fig4latex perl
+    buildcallscripts findhyph scripts/findhyph/findhyph perl
+    buildcallscripts fmtutil scripts/texlive/fmtutil.pl
+    buildcallscripts fmtutil-sys scripts/texlive/fmtutil-sys.sh
+    buildcallscripts fmtutil-user scripts/texlive/fmtutil-user.sh
+    buildcallscripts fragmaster scripts/fragmaster/fragmaster.pl
+    buildcallscripts getmapdl scripts/getmap/getmapdl.lua
+    buildcallscripts hyperxmp-add-bytecount scripts/hyperxmp/hyperxmp-add-bytecount.pl
+    buildcallscripts includeres scripts/psutils/includeres.pl
+    buildcallscripts installfont-tl scripts/installfont/installfont-tl bash
+    buildcallscripts jamo-normalize scripts/kotex-utils/jamo-normalize.pl
+    buildcallscripts jfmutil scripts/jfmutil/jfmutil.pl
+    buildcallscripts kanji-config-updmap scripts/ptex-fontmaps/kanji-config-updmap.pl
+    buildcallscripts kanji-config-updmap-sys scripts/ptex-fontmaps/kanji-config-updmap-sys.sh
+    buildcallscripts kanji-config-updmap-user scripts/ptex-fontmaps/kanji-config-updmap-user.sh
+    buildcallscripts kanji-fontmap-creator scripts/ptex-fontmaps/kanji-fontmap-creator.pl
+    buildcallscripts ketcindy scripts/ketcindy/ketcindy.pl
+    buildcallscripts komkindex scripts/kotex-utils/komkindex.pl
+    buildcallscripts l3build scripts/l3build/l3build.lua
+    buildcallscripts latex2man scripts/latex2man/latex2man perl
+    buildcallscripts latex2nemeth scripts/latex2nemeth/latex2nemeth bash
+    buildcallscripts latexdiff scripts/latexdiff/latexdiff.pl
+    buildcallscripts latexdiff-vc scripts/latexdiff/latexdiff-vc.pl
+    buildcallscripts latex-git-log scripts/latex-git-log/latex-git-log perl
+    buildcallscripts latexindent scripts/latexindent/latexindent.pl
+    buildcallscripts latexmk scripts/latexmk/latexmk.pl
+    buildcallscripts latexpand scripts/latexpand/latexpand perl
+    buildcallscripts latex-papersize scripts/latex-papersize/latex-papersize.py
+    buildcallscripts latexrevise scripts/latexdiff/latexrevise.pl
+    buildcallscripts lily-glyph-commands scripts/lilyglyphs/lily-glyph-commands.py
+    buildcallscripts lily-image-commands scripts/lilyglyphs/lily-image-commands.py
+    buildcallscripts lily-rebuild-pdfs scripts/lilyglyphs/lily-rebuild-pdfs.py
+    buildcallscripts listbib scripts/listbib/listbib bash
+    buildcallscripts llmk scripts/light-latex-make/llmk.lua
+    buildcallscripts ltx2crossrefxml scripts/crossrefware/ltx2crossrefxml.pl
+    buildcallscripts ltx2unitxt scripts/bibtexperllibs/ltx2unitxt perl
+    buildcallscripts ltximg scripts/ltximg/ltximg.pl
+    buildcallscripts luafindfont scripts/luafindfont/luafindfont.lua
+    buildcallscripts luaotfload-tool scripts/luaotfload/luaotfload-tool.lua
+    buildcallscripts lwarpmk scripts/lwarp/lwarpmk.lua
+    buildcallscripts make4ht scripts/make4ht/make4ht texlua
+    buildcallscripts makedtx scripts/makedtx/makedtx.pl
+    buildcallscripts makeglossaries scripts/glossaries/makeglossaries perl
+    buildcallscripts makeglossaries-lite scripts/glossaries/makeglossaries-lite.lua
+    buildcallscripts match_parens scripts/match_parens/match_parens ruby
+    buildcallscripts mathspic scripts/mathspic/mathspic.pl
+    buildcallscripts memoize-clean.pl scripts/memoize/memoize-clean.pl
+    buildcallscripts memoize-clean.py scripts/memoize/memoize-clean.py
+    buildcallscripts memoize-extract.pl scripts/memoize/memoize-extract.pl
+    buildcallscripts memoize-extract.py scripts/memoize/memoize-extract.py
+    buildcallscripts mf2pt1 scripts/mf2pt1/mf2pt1.pl
+    buildcallscripts mk4ht scripts/tex4ht/mk4ht.pl
+    buildcallscripts mkgrkindex scripts/mkgrkindex/mkgrkindex perl
+    buildcallscripts mkjobtexmf scripts/mkjobtexmf/mkjobtexmf.pl
+    buildcallscripts mkpic scripts/mkpic/mkpic perl
+    buildcallscripts mkt1font scripts/accfonts/mkt1font perl
+    buildcallscripts mktexlsr scripts/texlive/mktexlsr bash
+    buildcallscripts mktexmf scripts/texlive/mktexmf bash
+    buildcallscripts mktexpk scripts/texlive/mktexpk bash
+    buildcallscripts mktextfm scripts/texlive/mktextfm bash
+    buildcallscripts mptopdf scripts/context/perl/mptopdf.pl
+    buildcallscripts m-tx scripts/m-tx/m-tx.lua
+    buildcallscripts multibibliography scripts/multibibliography/multibibliography.pl
+    buildcallscripts musixflx scripts/musixtex/musixflx.lua
+    buildcallscripts musixtex scripts/musixtex/musixtex.lua
+    buildcallscripts optexcount scripts/optexcount/optexcount python
+    buildcallscripts ot2kpx scripts/fontools/ot2kpx perl
+    buildcallscripts pamphletangler scripts/clojure-pamphlet/pamphletangler perl
+    buildcallscripts pdfannotextractor scripts/pax/pdfannotextractor.pl
+    buildcallscripts pdfatfi scripts/attachfile2/pdfatfi.pl
+    buildcallscripts pdfcrop scripts/pdfcrop/pdfcrop.pl
+    buildcallscripts pdflatexpicscale scripts/pdflatexpicscale/pdflatexpicscale.pl
+    buildcallscripts pedigree scripts/pedigree-perl/pedigree.pl
+    buildcallscripts perltex scripts/perltex/perltex.pl
+    buildcallscripts pfarrei scripts/pfarrei/pfarrei.tlu
+    buildcallscripts pkfix scripts/pkfix/pkfix.pl
+    buildcallscripts pkfix-helper scripts/pkfix-helper/pkfix-helper perl
+    buildcallscripts pmxchords scripts/pmxchords/pmxchords.lua
+    buildcallscripts pn2pdf scripts/petri-nets/pn2pdf perl
+    buildcallscripts ps2eps scripts/ps2eps/ps2eps.pl
+    buildcallscripts ps4pdf scripts/pst-pdf/ps4pdf bash
+    buildcallscripts psjoin scripts/psutils/psjoin.pl
+    buildcallscripts pst2pdf scripts/pst2pdf/pst2pdf.pl
+    buildcallscripts ptex2pdf scripts/ptex2pdf/ptex2pdf.lua
+    buildcallscripts purifyeps scripts/purifyeps/purifyeps perl
+    buildcallscripts pygmentex scripts/pygmentex/pygmentex.py
+    buildcallscripts pythontex scripts/pythontex/pythontex.py
+    buildcallscripts rubikrotation scripts/rubik/rubikrotation.pl
+    buildcallscripts rungs scripts/texlive/rungs.lua
+    buildcallscripts runtexshebang scripts/runtexshebang/runtexshebang.lua
+    buildcallscripts spix scripts/spix/spix.py
+    buildcallscripts splitindex scripts/splitindex/splitindex.pl
+    buildcallscripts srcredact scripts/srcredact/srcredact.pl
+    buildcallscripts sty2dtx scripts/sty2dtx/sty2dtx.pl
+    buildcallscripts svn-multi scripts/svn-multi/svn-multi.pl
+    buildcallscripts tex4ebook scripts/tex4ebook/tex4ebook texlua
+    buildcallscripts texaccents scripts/texaccents/texaccents.sno snobol4
+    buildcallscripts texblend scripts/texblend/texblend texlua
+    buildcallscripts texcount scripts/texcount/texcount.pl
+    buildcallscripts texdef scripts/texdef/texdef.pl
+    buildcallscripts texdiff scripts/texdiff/texdiff perl
+    buildcallscripts texdirflatten scripts/texdirflatten/texdirflatten perl
+    buildcallscripts texdoc scripts/texdoc/texdoc.tlu
+    buildcallscripts texdoctk scripts/texdoctk/texdoctk.pl
+    buildcallscripts texfindpkg scripts/texfindpkg/texfindpkg.lua
+    buildcallscripts texfot scripts/texfot/texfot.pl
+    buildcallscripts texindy scripts/xindy/texindy.pl
+    buildcallscripts texliveonfly scripts/texliveonfly/texliveonfly.py
+    buildcallscripts texloganalyser scripts/texloganalyser/texloganalyser perl
+    buildcallscripts texlogfilter scripts/texlogfilter/texlogfilter perl
+    buildcallscripts texlogsieve scripts/texlogsieve/texlogsieve texlua
+    buildcallscripts texosquery scripts/texosquery/texosquery.sh
+    buildcallscripts texosquery-jre5 scripts/texosquery/texosquery-jre5.sh
+    buildcallscripts texosquery-jre8 scripts/texosquery/texosquery-jre8.sh
+    buildcallscripts texplate scripts/texplate/texplate.sh
+    buildcallscripts thumbpdf scripts/thumbpdf/thumbpdf.pl
+    buildcallscripts tlcockpit scripts/tlcockpit/tlcockpit.sh
+    buildcallscripts tlshell scripts/tlshell/tlshell.tcl
+    buildcallscripts ttf2kotexfont scripts/kotex-utils/ttf2kotexfont.pl
+    buildcallscripts ulqda scripts/ulqda/ulqda.pl
+    buildcallscripts updmap scripts/texlive/updmap.pl
+    buildcallscripts updmap-sys scripts/texlive/updmap-sys.sh
+    buildcallscripts updmap-user scripts/texlive/updmap-user.sh
+    buildcallscripts urlbst scripts/urlbst/urlbst perl
+    buildcallscripts vpe scripts/vpe/vpe.pl
+    buildcallscripts vpl2ovp scripts/accfonts/vpl2ovp perl
+    buildcallscripts vpl2vpl scripts/accfonts/vpl2vpl perl
+    buildcallscripts webquiz scripts/webquiz/webquiz.py
+    buildcallscripts xelatex-unsafe scripts/texlive-extra/xelatex-unsafe.sh
+    buildcallscripts xetex-unsafe scripts/texlive-extra/xetex-unsafe.sh
+    buildcallscripts xindex scripts/xindex/xindex.lua
+    buildcallscripts yplan scripts/yplan/yplan perl
 }
 
 mkdir -p src
