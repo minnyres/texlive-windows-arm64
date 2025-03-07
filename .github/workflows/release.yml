@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install \
-            build-essential p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texinfo bison flex m4 libtool libx11-dev clisp texlive-binaries
+            build-essential rsync p7zip cmake ninja-build pkg-config autoconf automake autoconf-archive make texinfo bison flex m4 libtool libx11-dev clisp texlive-binaries
           wget https://github.com/mstorsjo/llvm-mingw/releases/download/20240619/llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64.tar.xz
           tar -xf llvm-mingw-*.tar.xz
           mv llvm-mingw-20240619-ucrt-ubuntu-20.04-x86_64 llvm-mingw
@@ -75,6 +75,15 @@ jobs:
           export vcpkg_dir=${{ env.RUNVCPKG_VCPKG_ROOT }}
           chmod 755 build-cross.sh
           ./build-cross.sh
+
+      - name: Copy batch files
+        run: |
+          mkdir -p bat   
+          rsync -a --delete --exclude=.svn tug.org::tldevsrc/Master/bin/windows/*.bat bat
+          cp bat/ps4pdf.bat upload
+          cp bat/tlmgr.bat upload
+          cp bat/xelatex-unsafe.bat upload
+          cp bat/xetex-unsafe.bat upload
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
