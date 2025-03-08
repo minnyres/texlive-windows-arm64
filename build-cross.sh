@@ -294,6 +294,15 @@ function tlmklinks {
 mkdir -p src
 cd src
 
+# build gsl
+gsl_ver=2.8
+[ -d gsl-$gsl_ver ] || $wget https://ftpmirror.gnu.org/gsl/gsl-$gsl_ver.tar.gz
+tar xf gsl-$gsl_ver.tar.gz
+cd gsl-$gsl_ver
+./configure $commonflags 
+gnumakeplusinstall
+rm $prefix_dir/bin/gsl*
+
 # texlive
 usetlsrctarball=0
 if [[ $usetlsrctarball -eq 1 ]]
@@ -344,7 +353,7 @@ cd gc
 ./configure --build=x86_64-linux-gnu --host=$TARGET --enable-static --enable-shared=no --enable-cplusplus --enable-throw-bad-alloc-library
 make -j $(nproc) 
 cd ..
-LDFLAGS="$LDFLAGS gc/.libs/libgccpp.a -lshlwapi -lole32" ./configure --build=x86_64-linux-gnu --host=$TARGET --enable-texlive-build 
+LDFLAGS="$LDFLAGS gc/.libs/libgccpp.a -lshlwapi -lole32" ./configure $commonflags --enable-texlive-build 
 sed -i 's|-std=c++17| |' Makefile 
 ln $llvm_dir/generic-w64-mingw32/include/winsock2.h $llvm_dir/generic-w64-mingw32/include/Winsock2.h
 ln $llvm_dir/generic-w64-mingw32/include/windows.h $llvm_dir/generic-w64-mingw32/include/Windows.h
