@@ -12,7 +12,6 @@ gitclone="git clone --depth=1 --recursive"
 
 tlversion=20240311
 tlcommithash=bc2b83b09ba191c546cc178682e475b3de7f37a6
-# asymptote_ver=3.02git
 
 export PATH=$llvm_dir/bin:$PATH
 export TARGET=aarch64-w64-mingw32
@@ -318,14 +317,12 @@ cp ../texk/web2c/hitexdir/hitables.c texk/web2c
 make -j $(nproc)
 
 # build launchers (copy from MSYS2)
-cp "libs/lua53/.libs/texlua.dll" ../texk/texlive/windows_mingw_wrapper
-cp "libs/lua53/.libs/libtexlua53.dll.a" ../texk/texlive/windows_mingw_wrapper
 pushd ../texk/texlive/windows_mingw_wrapper
 
 echo '1 ICON "tlmgr.ico"'>texlive.rc
 $TARGET-windres texlive.rc texlive.o
 
-$TARGET-gcc -Os -s -shared -Wl,--out-implib=librunscript.dll.a -o runscript.dll runscript_dll.c -L./ -ltexlua53
+$TARGET-gcc -Os -s -shared -Wl,--out-implib=librunscript.dll.a -o runscript.dll runscript_dll.c
 $TARGET-gcc -Os -s -o runscript.exe runscript_exe.c texlive.o -L./ -lrunscript
 $TARGET-gcc -mwindows -Os -s -o wrunscript.exe wrunscript_exe.c texlive.o -L./ -lrunscript
 
