@@ -10,7 +10,7 @@ vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic
 wget="wget -nc --progress=bar:force"
 gitclone="git clone --depth=1 --recursive"
 
-tlversion=20240311
+tlversion=20250308
 tlcommithash=bc2b83b09ba191c546cc178682e475b3de7f37a6
 
 export PATH=$llvm_dir/bin:$PATH
@@ -304,7 +304,7 @@ gnumakeplusinstall
 rm $prefix_dir/bin/gsl*
 
 # texlive
-usetlsrctarball=0
+usetlsrctarball=1
 if [[ $usetlsrctarball -eq 1 ]]
 then
     [ -d texlive-$tlversion-source ] || $wget https://mirrors.ctan.org/systems/texlive/Source/texlive-$tlversion-source.tar.xz
