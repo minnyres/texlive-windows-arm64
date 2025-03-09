@@ -54,10 +54,10 @@ jobs:
         run: |
           mkdir -p bat   
           rsync -a --delete --exclude=.svn tug.org::tldevsrc/Master/bin/windows/*.bat bat
-          cp bat/ps4pdf.bat upload
-          cp bat/tlmgr.bat upload
-          cp bat/xelatex-unsafe.bat upload
-          cp bat/xetex-unsafe.bat upload
+          cp bat/ps4pdf.bat upload/windows
+          cp bat/tlmgr.bat upload/windows
+          cp bat/xelatex-unsafe.bat upload/windows
+          cp bat/xetex-unsafe.bat upload/windows
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

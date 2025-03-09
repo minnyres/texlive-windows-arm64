@@ -79,26 +79,34 @@ function tlmklinks {
     buildcallexe luatex dviluatex
     buildcallexe pdftex eplain
     buildcallexe euptex eptex
-    buildcallexe xdvipdfmx extractbb
+    buildcallexe pdftex etex
     buildcallexe hitex hilatex
     buildcallexe pdftex jadetex
+    buildcallexe pdftex latex
     buildcallexe texdef latexdef
     buildcallexe pdftex latex-dev
     buildcallexe tex lollipop
     buildcallexe luatex luacsplain
     buildcallexe luahbtex lualatex
     buildcallexe luahbtex lualatex-dev
+    buildcallexe pdftex mex
     buildcallexe pdftex mllatex
     buildcallexe pdftex mltex
-    buildcallexe luatex optex
+    buildcallexe luahbtex optex
+    buildcallexe upbibtex pbibtex
     buildcallexe pdftex pdfcsplain
     buildcallexe pdftex pdfetex
     buildcallexe pdftex pdfjadetex
+    buildcallexe pdftex pdflatex
     buildcallexe pdftex pdflatex-dev
     buildcallexe pdftex pdfmex
     buildcallexe pdftex pdfxmltex
+    buildcallexe updvitype pdvitype
     buildcallexe euptex platex
     buildcallexe euptex platex-dev
+    buildcallexe uppltotf ppltotf
+    buildcallexe euptex ptex
+    buildcallexe uptftopl ptftopl
     buildcallexe epstopdf repstopdf
     buildcallexe mpost r-mpost
     buildcallexe pdfcrop rpdfcrop
@@ -107,7 +115,9 @@ function tlmklinks {
     buildcallexe pdftex texsis
     buildcallexe euptex uplatex
     buildcallexe euptex uplatex-dev
+    buildcallexe euptex uptex
     buildcallexe pdftex utf8mex
+    buildcallexe xetex xelatex
     buildcallexe xetex xelatex-dev
     buildcallexe pdftex xmltex
     
@@ -116,6 +126,7 @@ function tlmklinks {
     buildcallscripts a5toa4 scripts/pfarrei/a5toa4.tlu
     buildcallscripts afm2afm scripts/fontools/afm2afm perl
     buildcallscripts albatross scripts/albatross/albatross.sh
+    buildcallscripts aom-fullref scripts/aomart/aom-fullref.pl
     buildcallscripts arara scripts/arara/arara.sh
     buildcallscripts arlatex scripts/bundledoc/arlatex perl
     buildcallscripts authorindex scripts/authorindex/authorindex perl
@@ -127,6 +138,8 @@ function tlmklinks {
     buildcallscripts bibmradd scripts/crossrefware/bibmradd.pl
     buildcallscripts biburl2doi scripts/crossrefware/biburl2doi.pl
     buildcallscripts bibzbladd scripts/crossrefware/bibzbladd.pl
+    buildcallscripts bookshelf-listallfonts scripts/bookshelf/bookshelf-listallfonts perl
+    buildcallscripts bookshelf-mkfontsel scripts/bookshelf/bookshelf-mkfontsel perl
     buildcallscripts bundledoc scripts/bundledoc/bundledoc perl
     buildcallscripts cachepic scripts/cachepic/cachepic.tlu
     buildcallscripts checkcites scripts/checkcites/checkcites.lua
@@ -140,6 +153,7 @@ function tlmklinks {
     buildcallscripts ctanify scripts/ctanify/ctanify perl
     buildcallscripts ctan-o-mat scripts/ctan-o-mat/ctan-o-mat.pl
     buildcallscripts ctanupload scripts/ctanupload/ctanupload.pl
+    buildcallscripts datatool2bib scripts/bib2gls/datatool2bib.sh
     buildcallscripts de-macro scripts/de-macro/de-macro python
     buildcallscripts depythontex scripts/pythontex/depythontex.py
     buildcallscripts deweb scripts/chktex/deweb.pl
@@ -156,6 +170,8 @@ function tlmklinks {
     buildcallscripts epspdftk scripts/epspdf/epspdftk.tcl
     buildcallscripts epstopdf scripts/epstopdf/epstopdf.pl
     buildcallscripts exceltex scripts/exceltex/exceltex perl
+    buildcallscripts explcheck scripts/expltools/explcheck.lua
+    buildcallscripts extractbb scripts/extractbb/extractbb.lua
     buildcallscripts extractres scripts/psutils/extractres.pl
     buildcallscripts fig4latex scripts/fig4latex/fig4latex perl
     buildcallscripts findhyph scripts/findhyph/findhyph perl
@@ -176,12 +192,14 @@ function tlmklinks {
     buildcallscripts ketcindy scripts/ketcindy/ketcindy.pl
     buildcallscripts komkindex scripts/kotex-utils/komkindex.pl
     buildcallscripts l3build scripts/l3build/l3build.lua
+    buildcallscripts l3sys-query scripts/l3sys-query/l3sys-query.lua
     buildcallscripts latex2man scripts/latex2man/latex2man perl
     buildcallscripts latex2nemeth scripts/latex2nemeth/latex2nemeth bash
     buildcallscripts latexdiff scripts/latexdiff/latexdiff.pl
     buildcallscripts latexdiff-vc scripts/latexdiff/latexdiff-vc.pl
     buildcallscripts latex-git-log scripts/latex-git-log/latex-git-log perl
     buildcallscripts latexindent scripts/latexindent/latexindent.pl
+    buildcallscripts latexminted scripts/minted/latexminted.py
     buildcallscripts latexmk scripts/latexmk/latexmk.pl
     buildcallscripts latexpand scripts/latexpand/latexpand perl
     buildcallscripts latex-papersize scripts/latex-papersize/latex-papersize.py
@@ -201,6 +219,7 @@ function tlmklinks {
     buildcallscripts makedtx scripts/makedtx/makedtx.pl
     buildcallscripts makeglossaries scripts/glossaries/makeglossaries perl
     buildcallscripts makeglossaries-lite scripts/glossaries/makeglossaries-lite.lua
+    buildcallscripts markdown2tex scripts/markdown/markdown2tex.lua
     buildcallscripts match_parens scripts/match_parens/match_parens ruby
     buildcallscripts mathspic scripts/mathspic/mathspic.pl
     buildcallscripts memoize-clean.pl scripts/memoize/memoize-clean.pl
@@ -236,6 +255,7 @@ function tlmklinks {
     buildcallscripts pkfix-helper scripts/pkfix-helper/pkfix-helper perl
     buildcallscripts pmxchords scripts/pmxchords/pmxchords.lua
     buildcallscripts pn2pdf scripts/petri-nets/pn2pdf perl
+    buildcallscripts ppmcheckpdf scripts/ppmcheckpdf/ppmcheckpdf.lua
     buildcallscripts ps2eps scripts/ps2eps/ps2eps.pl
     buildcallscripts ps4pdf scripts/pst-pdf/ps4pdf bash
     buildcallscripts psjoin scripts/psutils/psjoin.pl
@@ -249,6 +269,7 @@ function tlmklinks {
     buildcallscripts runtexshebang scripts/runtexshebang/runtexshebang.lua
     buildcallscripts spix scripts/spix/spix.py
     buildcallscripts splitindex scripts/splitindex/splitindex.pl
+    buildcallscripts sqltex scripts/sqltex/sqltex perl
     buildcallscripts srcredact scripts/srcredact/srcredact.pl
     buildcallscripts sty2dtx scripts/sty2dtx/sty2dtx.pl
     buildcallscripts svn-multi scripts/svn-multi/svn-multi.pl
@@ -276,6 +297,7 @@ function tlmklinks {
     buildcallscripts tlcockpit scripts/tlcockpit/tlcockpit.sh
     buildcallscripts tlshell scripts/tlshell/tlshell.tcl
     buildcallscripts ttf2kotexfont scripts/kotex-utils/ttf2kotexfont.pl
+    buildcallscripts typog-grep scripts/typog/typog-grep.pl
     buildcallscripts ulqda scripts/ulqda/ulqda.pl
     buildcallscripts updmap scripts/texlive/updmap.pl
     buildcallscripts updmap-sys scripts/texlive/updmap-sys.sh
@@ -318,6 +340,7 @@ fi
 
 
 sed -i 's|\./himktables\$(EXEEXT)|#\./himktables\$(EXEEXT)|' texk/web2c/Makefile.in 
+sed -i 's|"texlua"|"texluajit"|'  texk/texlive/windows_mingw_wrapper/runscript_dll.c
 mkdir build-woa
 cd build-woa
 mkdir -p texk/web2c
