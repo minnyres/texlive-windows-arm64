@@ -123,7 +123,7 @@ jobs:
         with:
           msystem: UCRT64
           update: true
-          install: p7zip mingw-w64-ucrt-x86_64-ntldd
+          install: p7zip mingw-w64-ucrt-x86_64-ntldd gzip
 
       - name: copy dlls in MSYS2
         shell: msys2 {0}
@@ -132,10 +132,12 @@ jobs:
           ntldd -R --search-dir ./vcpkg-dll windows/*.exe | awk '{print $3}'| grep vcpkg  | sed 's|\\|/|g' | xargs -I{} cp -u {} windows
           mv ../luametatex-upload/luametatex.exe windows
           7z a -mx9 texlive-mingw-arm64.7z windows
+          tar zcvf texlive-mingw-arm64.tar.gz windows
           mv texlive-mingw-arm64.7z ..
+          mv texlive-mingw-arm64.tar.gz ..
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: texlive-mingw-arm64
-          path: texlive-mingw-arm64.7z
+          path: texlive-mingw-arm64*
