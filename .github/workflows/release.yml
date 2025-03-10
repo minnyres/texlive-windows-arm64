@@ -141,3 +141,11 @@ jobs:
         with:
           name: texlive-mingw-arm64
           path: texlive-mingw-arm64*
+
+      - name: Batch release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: texlive-mingw-arm64*
