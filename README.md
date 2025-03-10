@@ -24,7 +24,7 @@ mv .\windows\ .\windows-x64
 ```
 Download the [Arm64 binaries](https://github.com/minnyres/texlive-windows-arm64/releases/download/build-20250310/texlive-mingw-arm64-20250310.tar.gz) with a web browder, or with `curl.exe` command in Powershell
 ``` 
-curl.exe https://github.com/minnyres/texlive-windows-arm64/releases/download/build-20250310/texlive-mingw-arm64-20250310.tar.gz -o texlive-mingw-arm64.tar.gz
+curl.exe -L https://github.com/minnyres/texlive-windows-arm64/releases/download/build-20250310/texlive-mingw-arm64-20250310.tar.gz -o texlive-mingw-arm64.tar.gz
 ```
 Extract the archive in Powershell
 ```
