@@ -1,6 +1,6 @@
-# texlive-mingw-arm64
+# texlive-windows-arm64
 
-This project distributes TeX Live build for Windows Arm64. The binary files are available at the [release page](https://github.com/minnyres/texlive-mingw-arm64/releases).
+This project distributes TeX Live build for Windows Arm64. The binary files are available at the [release page](https://github.com/minnyres/texlive-windows-arm64/releases).
 
 ## How to install
 ### Step 1: Install TeX Live 2025

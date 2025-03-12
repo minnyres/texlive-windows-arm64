@@ -22,10 +22,13 @@ export NM=$TARGET-nm
 export RANLIB=$TARGET-ranlib
 export STRIP=$TARGET-strip
 
-export CFLAGS="-O2 -g0 -I$prefix_dir/include -I$vcpkg_libs_dir/include"
+WARNING_FLAGS="-Werror=odr -Werror=strict-aliasing"
+COMMON_FLAGS="-O2 -pipe -g0 -flto=thin ${WARNING_FLAGS}"
+export USE="lto"
+export CFLAGS="$COMMON_FLAGS -I$prefix_dir/include -I$vcpkg_libs_dir/include"
 export CXXFLAGS=$CFLAGS
 export CPPFLAGS="-I$prefix_dir/include -I$vcpkg_libs_dir/include -Wno-error=incompatible-function-pointer-types"
-export LDFLAGS="-s -L$prefix_dir/lib -L$vcpkg_libs_dir/lib" # -Wl,--allow-multiple-definition"
+export LDFLAGS="-s -flto=thin -L$prefix_dir/lib -L$vcpkg_libs_dir/lib" # -Wl,--allow-multiple-definition"
 
 # anything that uses pkg-config
 export PKG_CONFIG=/usr/bin/pkg-config
