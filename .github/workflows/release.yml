@@ -35,12 +35,10 @@ jobs:
           PATH=$PATH:${{ env.llvm_path }}/bin
           # tell vcpkg to only build Release variants of the dependencies
           cd ${{ env.RUNVCPKG_VCPKG_ROOT }}
-          echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-dynamic.cmake
-          echo "set(VCPKG_BUILD_TYPE release)" >> triplets/community/arm64-mingw-static.cmake
           packages='icu harfbuzz[graphite2] cairo pixman libgd freetype libpng libatomic-ops readline glm ncurses eigen3 fftw3 opengl freeglut'
           ./vcpkg upgrade 
-          ./vcpkg install $packages --triplet arm64-mingw-dynamic --host-triplet=x64-linux-release --clean-after-build --allow-unsupported
-          cd installed/arm64-mingw-dynamic/lib/
+          ./vcpkg install $packages --overlay-triplets=${{ github.workspace }}/overlay_triplets --triplet arm64-mingw-dynamic-lto-rel --host-triplet=x64-linux-release --clean-after-build --allow-unsupported
+          cd installed/arm64-mingw-dynamic-lto-rel/lib/
           ln libzlib.dll.a libz.dll.a
           ln libfreeglut.dll.a libglut.dll.a 
 

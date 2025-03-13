@@ -4,7 +4,7 @@ prefix_dir=$PWD/texlive-windows-arm64
 workdir=$PWD
 mkdir -p "$prefix_dir/bin"
 [ -z "$vcpkg_dir" ] && vcpkg_dir=$PWD/vcpkg
-vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic
+vcpkg_libs_dir=$vcpkg_dir/installed/arm64-mingw-dynamic-lto-rel
 [ -z "$llvm_dir" ] && llvm_dir=$PWD/llvm-mingw
 
 wget="wget -nc --progress=bar:force"
